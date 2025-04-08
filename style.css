@@ -97,7 +97,11 @@ controls-container {
     outline: none;
     box-shadow: 0 0 0 2px rgba(106, 176, 243, 0.3);
   }
-
+@media (max-width: 480px) {
+    .styled-select {
+        width: 100%;
+    }
+}
 @media (max-width: 480px) {
     .controls-wrapper {
         flex-direction: column;
