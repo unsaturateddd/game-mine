@@ -80,29 +80,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateGame() {
-        const difficulty = parseInt(difficultySelect.value);
-        const cells = board.querySelectorAll('.cell');
-        const mines = new Set();
+    const difficulty = parseInt(difficultySelect.value);
+    const cells = board.querySelectorAll('.cell');
+    const mines = new Set();
 
-        while(mines.size < difficulty) {
-            const randomIndex = Math.floor(Math.random() * BOARD_SIZE);
-            mines.add(randomIndex);
-        }
-
-        cells.forEach((cell, index) => {
-            const img = document.createElement('img');
-            img.src = mines.has(index) ? MINE_IMG : STAR_IMG;
-            cell.innerHTML = '';
-            cell.appendChild(img);
-        });
+    // Проверка минимального значения
+    if(difficulty < 1 || difficulty > 24) {
+        console.error("Некорректное количество мин");
+        return;
     }
 
-    initBoard();
-    startButton.addEventListener('click', generateGame);
+    while(mines.size < difficulty) {
+        const randomIndex = Math.floor(Math.random() * BOARD_SIZE);
+        mines.add(randomIndex);
+    }
 
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        particles.forEach(particle => particle.reset());
+    cells.forEach((cell, index) => {
+        const img = document.createElement('img');
+        img.src = mines.has(index) ? MINE_IMG : STAR_IMG;
+        cell.innerHTML = '';
+        cell.appendChild(img);
     });
 });
