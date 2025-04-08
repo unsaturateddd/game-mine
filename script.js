@@ -1,16 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    
+    // Автоматическая настройка размеров
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    
+    // Класс частицы
     class Particle {
-        constructor(canvas) {
-            this.canvas = canvas;
-            this.ctx = canvas.getContext('2d');
+        constructor() {
             this.reset();
             this.size = Math.random() * 2 + 1;
             this.color = `hsl(${Math.random() * 60 + 180}, 70%, 50%)`;
         }
 
         reset() {
-            this.x = Math.random() * this.canvas.width;
-            this.y = Math.random() * this.canvas.height;
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
             this.speedX = Math.random() * 3 - 1.5;
             this.speedY = Math.random() * 3 - 1.5;
         }
@@ -19,35 +28,40 @@ document.addEventListener('DOMContentLoaded', () => {
             this.x += this.speedX;
             this.y += this.speedY;
             
-            if (this.x > this.canvas.width + 50 || this.x < -50 || 
-                this.y > this.canvas.height + 50 || this.y < -50) {
+            if (this.x > canvas.width + 50 || this.x < -50 || 
+                this.y > canvas.height + 50 || this.y < -50) {
                 this.reset();
             }
         }
 
         draw() {
-            this.ctx.fillStyle = this.color;
-            this.ctx.beginPath();
-            this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            this.ctx.fill();
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
         }
     }
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    const particles = Array.from({ length: 100 }, () => new Particle(canvas));
-    
-    function animateParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Инициализация частиц
+    const particles = Array.from({ length: 100 }, () => new Particle());
+
+    // Анимация
+    function animate() {
+        ctx.fillStyle = 'rgba(9, 32, 63, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
         particles.forEach(particle => {
             particle.update();
             particle.draw();
         });
-        requestAnimationFrame(animateParticles);
+        
+        requestAnimationFrame(animate);
     }
-    animateParticles();
+
+    // Запуск
+    window.addEventListener('resize', resizeCanvas);
+    animate();
+});
     const BOARD_SIZE = 25;
     const MINE_IMG = 'svgs/cross.png';
     const STAR_IMG = 'svgs/stars.svg';
